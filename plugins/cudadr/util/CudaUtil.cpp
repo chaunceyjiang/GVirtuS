@@ -40,6 +40,16 @@
 
 #include <cuda.h>
 
+#if CUDA_VERSION >= 11000
+struct __align__(8) fatBinaryHeader
+{
+    unsigned int           magic;
+    unsigned short         version;
+    unsigned short         headerSize;
+    unsigned long long int fatSize;
+};
+#endif
+
 using namespace std;
 
 CudaUtil::CudaUtil() {
@@ -79,7 +89,7 @@ void CudaUtil::MarshalDevicePointer(const void* devPtr, char * marshal) {
 #endif
 }
 
-Buffer * CudaUtil::MarshalFatCudaBinary(__cudaFatCudaBinary* bin, Buffer * marshal) {
+Buffer* CudaUtil::MarshalFatCudaBinary(__cudaFatCudaBinary* bin, Buffer * marshal) {
     if (marshal == NULL)
         marshal = new Buffer();
     size_t size;
@@ -168,7 +178,7 @@ Buffer * CudaUtil::MarshalFatCudaBinary(__cudaFatCudaBinary* bin, Buffer * marsh
     return marshal;
 }
 
-Buffer * CudaUtil::MarshalFatCudaBinary(__fatBinC_Wrapper_t* bin, Buffer * marshal) {
+Buffer* CudaUtil::MarshalFatCudaBinary(__fatBinC_Wrapper_t* bin, Buffer * marshal) {
     if (marshal == NULL)
         marshal = new Buffer();
     //size_t size = (unsigned long long*)&(bin->magic) - bin->data;

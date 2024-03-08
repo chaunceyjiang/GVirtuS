@@ -48,7 +48,9 @@ CudaDrHandler::CudaDrHandler() {
     mpFatBinary = new map<string, void **>();
     mpDeviceFunction = new map<string, string > ();
     mpVar = new map<string, string > ();
+#if (CUDA_VERSION < 12000)
     mpTexture = new map<string, textureReference *>();
+#endif
     Initialize();
 }
 
@@ -178,6 +180,7 @@ const char * CudaDrHandler::GetVar(const char* handler) {
     return GetVar(tmp);
 }
 
+#if (CUDA_VERSION < 12000)
 void CudaDrHandler::RegisterTexture(string& handler, textureReference* texref) {
     mpTexture->insert(make_pair(handler, texref));
 //#ifdef DEBUG
@@ -211,6 +214,7 @@ const char *CudaDrHandler::GetTextureHandler(textureReference* texref) {
             return it->first.c_str();
     return NULL;
 }
+#endif
 
 const char *CudaDrHandler::GetSymbol(Buffer* in) {
     char *symbol_handler = in->AssignString();

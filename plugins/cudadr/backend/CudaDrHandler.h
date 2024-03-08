@@ -40,15 +40,19 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <fcntl.h>
-#include "communicator/Result.h"
+#include <gvirtus/communicators/Result.h>
 #include <cuda.h>
-#include "Handler.h"
+#include <gvirtus/backend/Handler.h>
 
 #include "log4cplus/logger.h"
 #include "log4cplus/loggingmacros.h"
 #include "log4cplus/configurator.h"
 
-class CudaDrHandler : public Handler{
+using gvirtus::common::pointer_t;
+using gvirtus::communicators::Buffer;
+using gvirtus::communicators::Result;
+
+class CudaDrHandler : public gvirtus::backend::Handler{
 public:
     CudaDrHandler();
     virtual ~CudaDrHandler();
@@ -71,13 +75,13 @@ public:
     void RegisterVar(const char *handler, const char *deviceName);
     const char *GetVar(std::string & handler);
     const char *GetVar(const char *handler);
-
+#if (CUDA_VERSION < 12000)
     void RegisterTexture(std::string & handler, textureReference *texref);
     void RegisterTexture(const char *handler, textureReference *texref);
     textureReference *GetTexture(std::string & handler);
     textureReference *GetTexture(const char *handler);
     const char *GetTextureHandler(textureReference *texref);
-
+#endif
     const char *GetSymbol(Buffer * in);
 
     void RegisterSharedMemory(const char *name) {
@@ -127,7 +131,9 @@ private:
     std::map<std::string, void **> * mpFatBinary;
     std::map<std::string, std::string> * mpDeviceFunction;
     std::map<std::string, std::string> * mpVar;
+#if (CUDA_VERSION < 12000)
     std::map<std::string, textureReference *> * mpTexture;
+#endif
     void *mpShm;
     int mShmFd;
 };

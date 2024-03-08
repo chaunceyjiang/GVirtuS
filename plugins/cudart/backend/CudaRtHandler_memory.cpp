@@ -928,3 +928,18 @@ CUDA_ROUTINE_HANDLER(Memset2D) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+
+CUDA_ROUTINE_HANDLER(MemGetInfo) {
+    try {
+        size_t *free = input_buffer->Assign<size_t>();
+        size_t *total = input_buffer->Assign<size_t>();
+        cudaError_t exit_code = cudaMemGetInfo(free,total);
+        std::shared_ptr<Buffer> out = std::make_shared<Buffer>();
+        out->Add(free);
+        out->Add(total);
+        return std::make_shared<Result>(exit_code, out);
+    } catch (string e) {
+        cerr << e << endl;
+        return std::make_shared<Result>(cudaErrorMemoryAllocation);
+    }
+}
