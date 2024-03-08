@@ -34,9 +34,10 @@
 #include "CudaDr.h"
 #include <cuda.h>
 
-#include "util/Encoder.h"
+#include "gvirtus/common/Encoder.h"
 
 using namespace std;
+using gvirtus::common::Encoder;
 
 /*Load a module's data. */
 extern CUresult cuModuleLoadData(CUmodule *module, const void *image) {
