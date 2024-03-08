@@ -31,17 +31,6 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and push cuda samples
-        id: docker_build_cuda_samples
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          file: ./docker/Dockerfile-cuda-samples
-          push: true
-          platforms: linux/amd64
-          tags: |
-            ghcr.io/megacloudcontainer/gvirtus/cuda-samples:dev
-
       - name: Build and push server
         id: docker_build_server
         uses: docker/build-push-action@v4
@@ -63,3 +52,13 @@ jobs:
           platforms: linux/amd64
           tags: |
             ghcr.io/megacloudcontainer/gvirtus/client:dev
+      - name: Build and push cuda samples
+        id: docker_build_cuda_samples
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile-cuda-samples
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/megacloudcontainer/gvirtus/cuda-samples:dev
