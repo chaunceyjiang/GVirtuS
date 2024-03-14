@@ -1,0 +1,54 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - 'master'
+
+jobs:
+  build-and-push-image:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Cache Docker layers
+        uses: actions/cache@v2
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-buildx-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-buildx-
+      - name: Set up qemu
+        uses: docker/setup-qemu-action@v3
+        with:
+          platforms: amd64
+      - name: Login registry
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      - name: Build and push server
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile-server
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ GITHUB_REPOSITORY_NAME_PART }}/server:dev
+
+      - name: Build and push server
+        id: docker_build
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile-client
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ GITHUB_REPOSITORY_NAME_PART }}/client:dev            
+
