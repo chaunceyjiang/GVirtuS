@@ -1,0 +1,30 @@
+kind: DaemonSet
+apiVersion: apps/v1
+metadata:
+  name: gvirtus-backend
+  namespace: default
+spec:
+  selector:
+    matchLabels:
+      app: gvirtus-backend
+  template:
+    metadata:
+      labels:
+        app: gvirtus-backend
+    spec:
+      hostNetwork: true
+      containers:
+        - name: container-1
+          image: ghcr.io/MegaCloudContainer/GVirtuS/server:dev
+          ports:
+            - name: http
+              containerPort: 9999
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 250m
+              memory: 512Mi
+              nvidia.com/gpucores: 50
+              nvidia.com/gpumem: 3000
+              nvidia.com/vgpu: 1
+      restartPolicy: Always
