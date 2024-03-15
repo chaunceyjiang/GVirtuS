@@ -39,7 +39,7 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/MegaCloudContainer/${{ GITHUB_REPOSITORY_NAME_PART }}/server:dev
+            ghcr.io/MegaCloudContainer/GVirtuS/server:dev
 
       - name: Build and push server
         id: docker_build
@@ -50,5 +50,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/MegaCloudContainer/${{ GITHUB_REPOSITORY_NAME_PART }}/client:dev            
+            ghcr.io/MegaCloudContainer/GVirtuS/client:dev            
 
