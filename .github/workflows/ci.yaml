@@ -39,7 +39,7 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/MegaCloudContainer/GVirtuS/server:dev
+            ghcr.io/megacloudcontainer/gvirtus/server:dev
 
       - name: Build and push server
         id: docker_build_client
@@ -50,5 +50,5 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/MegaCloudContainer/GVirtuS/client:dev            
+            ghcr.io/megacloudcontainer/gvirtus/client:dev            
 
