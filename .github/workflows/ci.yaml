@@ -31,7 +31,7 @@ jobs:
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Build and push server
-        id: docker_build
+        id: docker_build_server
         uses: docker/build-push-action@v4
         with:
           context: .
@@ -42,7 +42,7 @@ jobs:
             ghcr.io/MegaCloudContainer/GVirtuS/server:dev
 
       - name: Build and push server
-        id: docker_build
+        id: docker_build_client
         uses: docker/build-push-action@v4
         with:
           context: .
