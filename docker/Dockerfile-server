@@ -19,4 +19,6 @@ COPY --from=cuda11 /root/GVirtuS /GVirtuS
 RUN sed -i 's/127.0.0.1/0.0.0.0/g' /GVirtuS/etc/properties.json
 ENV GVIRTUS_HOME=/GVirtuS
 ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${LD_LIBRARY_PATH}
+ENV GVIRTUS_LOGLEVEL=10000
+RUN mkdir /licenses && mv /NGC-DL-CONTAINER-LICENSE /licenses/NGC-DL-CONTAINER-LICENSE
 CMD ["/GVirtuS/bin/gvirtus-backend", "/GVirtuS/etc/properties.json"]
