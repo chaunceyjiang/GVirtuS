@@ -1,0 +1,17 @@
+FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as cuda11
+WORKDIR /
+RUN apt-get update
+RUN apt-get install -y git  cmake curl
+
+RUN git clone -b v11.8 https://github.com/NVIDIA/cuda-samples
+RUN cd cuda-samples && make EXTRA_NVCCFLAGS="--cudart=shared" all
+
+FROM ghcr.io/megacloudcontainer/gvirtus/client:dev
+WORKDIR /
+COPY --from=cuda11 /cuda-samples/bin/x86_64/linux/release/ /usr/local/bin/
+ENV GVIRTUS_HOME=/GVirtuS
+ENV GVIRTUS_CONFIG=${GVIRTUS_HOME}/etc/properties.json
+ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${GVIRTUS_HOME}/lib/frontend:${LD_LIBRARY_PATH}
+ENV GVIRTUS_LOGLEVEL=10000
+RUN ln -s /GVirtuS/lib/frontend/libcudart.so.11  /GVirtuS/lib/frontend/libcudart.so.11.0
+CMD ["sleep", "infinity"]
