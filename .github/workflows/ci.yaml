@@ -53,7 +53,7 @@ jobs:
             ghcr.io/megacloudcontainer/gvirtus/client:dev
 
       - name: Build and push cuda samples
-        id: docker_build_client
+        id: docker_build_cuda_samples
         uses: docker/build-push-action@v4
         with:
           context: .
