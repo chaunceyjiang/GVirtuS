@@ -28,3 +28,17 @@ spec:
               nvidia.com/gpumem: 3000
               nvidia.com/vgpu: 1
       restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: gvirtus-backend
+  namespace: default
+spec:
+  ports:
+    - port: 9999
+      protocol: TCP
+      targetPort: 9999
+  selector:
+    app: gvirtus-backend
+  type: NodePort

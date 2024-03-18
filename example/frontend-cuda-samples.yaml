@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gvirtus-demo
+  labels:
+    gvirtus: gvirtus
+spec:
+  selector:
+    matchLabels:
+      gvirtus: gvirtus
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        gvirtus: gvirtus
+    spec:
+      containers:
+        - name: sleep
+          image: ghcr.io/megacloudcontainer/gvirtus/cuda-samples:dev
+          command: ["sleep", "infinity"]
+          imagePullPolicy: IfNotPresent
+          env:
+            - name: GVIRTUS_CONFIG
+              value: /GVirtuS/config/properties.json
+          volumeMounts:
+            - name: config-volume
+              mountPath: /GVirtuS/config
+      volumes:
+        - name: config-volume
+          configMap:
+            name: gvirtus-config
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: gvirtus-config
+data:
+  properties.json: |
+    {
+      "communicator": [
+        {
+          "endpoint": {
+            "suite": "tcp/ip",
+            "protocol": "tcp",
+            "server_address": "gvirtus-backend.default.svc.cluster.local",
+            "port": "9999"
+          },
+          "plugins": [
+            "cudart",
+            "cublas",
+            "curand",
+            "cudnn"
+          ]
+        }
+      ],
+      "secure_application": false
+    }

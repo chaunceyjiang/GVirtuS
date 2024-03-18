@@ -50,5 +50,15 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            ghcr.io/megacloudcontainer/gvirtus/client:dev            
+            ghcr.io/megacloudcontainer/gvirtus/client:dev
 
+      - name: Build and push cuda samples
+        id: docker_build_client
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./docker/Dockerfile-cuda-samples
+          push: true
+          platforms: linux/amd64
+          tags: |
+            ghcr.io/megacloudcontainer/gvirtus/cuda-samples:dev
