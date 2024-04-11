@@ -27,6 +27,7 @@
 
 using namespace std;
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI cudaBindTexture(
     size_t *offset, const textureReference *texref, const void *devPtr,
     const cudaChannelFormatDesc *desc, size_t size) {
@@ -43,7 +44,9 @@ extern "C" __host__ cudaError_t CUDARTAPI cudaBindTexture(
     *offset = *(CudaRtFrontend::GetOutputHostPointer<size_t>());
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaBindTexture2D(size_t *offset, const textureReference *texref,
                   const void *devPtr, const cudaChannelFormatDesc *desc,
@@ -70,7 +73,9 @@ cudaBindTexture2D(size_t *offset, const textureReference *texref,
 
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaBindTextureToArray(const textureReference *texref, const cudaArray *array,
                        const cudaChannelFormatDesc *desc) {
@@ -83,6 +88,7 @@ cudaBindTextureToArray(const textureReference *texref, const cudaArray *array,
   CudaRtFrontend::Execute("cudaBindTextureToArray");
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
 extern "C" __host__ cudaChannelFormatDesc CUDARTAPI
 cudaCreateChannelDesc(int x, int y, int z, int w, cudaChannelFormatKind f) {
@@ -107,6 +113,7 @@ cudaGetChannelDesc(cudaChannelFormatDesc *desc, const cudaArray *array) {
   return CudaRtFrontend::GetExitCode();
 }
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaGetTextureAlignmentOffset(size_t *offset, const textureReference *texref) {
   CudaRtFrontend::Prepare();
@@ -117,7 +124,9 @@ cudaGetTextureAlignmentOffset(size_t *offset, const textureReference *texref) {
     *offset = *(CudaRtFrontend::GetOutputHostPointer<size_t>());
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaGetTextureReference(const textureReference **texref, const void *symbol) {
   CudaRtFrontend::Prepare();
@@ -132,7 +141,9 @@ cudaGetTextureReference(const textureReference **texref, const void *symbol) {
   }
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaUnbindTexture(const textureReference *texref) {
   CudaRtFrontend::Prepare();
@@ -140,6 +151,7 @@ cudaUnbindTexture(const textureReference *texref) {
   CudaRtFrontend::Execute("cudaUnbindTexture");
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
 extern "C" __host__ cudaError_t CUDARTAPI cudaCreateTextureObject(
     cudaTextureObject_t *pTexObject, const struct cudaResourceDesc *pResDesc,

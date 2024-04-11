@@ -39,10 +39,12 @@
 #include <map>
 #include <string>
 #include <memory>
+#include <cuda_runtime_api.h>
 
+#if CUDART_VERSION < 12000
 #include <cublas.h>
-#include "cublas_v2.h"
-
+#endif
+#include <cublas_v2.h>
 #include <gvirtus/backend/Handler.h>
 #include <gvirtus/communicators/Result.h>
 

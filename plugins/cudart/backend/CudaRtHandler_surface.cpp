@@ -29,10 +29,9 @@
 using namespace std;
 
 // extern const surfaceReference *getSurface(const surfaceReference *handler);
-
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(BindSurfaceToArray) {
   char *surfrefHandler = input_buffer->AssignString();
-
   surfaceReference *guestSurfref = input_buffer->Assign<surfaceReference>();
 
   surfaceReference *surfref = pThis->GetSurface(surfrefHandler);
@@ -45,6 +44,7 @@ CUDA_ROUTINE_HANDLER(BindSurfaceToArray) {
 
   return std::make_shared<Result>(exit_code);
 }
+#endif
 
 // CUDA_ROUTINE_HANDLER(GetTextureReference) {
 //    textureReference *texref;

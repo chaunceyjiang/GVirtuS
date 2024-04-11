@@ -24,11 +24,13 @@
  */
 #ifndef CUBLASFRONTEND_H
 #define	CUBLASFRONTEND_H
-
-#include <cublas.h>
-#include <cublas_api.h>
-#include "cublas_v2.h"
 #include <cuda_runtime_api.h>
+
+#if CUDART_VERSION < 12000
+#include <cublas.h>
+#endif
+#include "cublas_v2.h"
+#include <cublas_api.h>
 
 #include <gvirtus/frontend/Frontend.h>
 //#include "Cublas.h"

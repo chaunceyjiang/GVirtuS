@@ -852,7 +852,7 @@ CUBLAS_ROUTINE_HANDLER(Ssbmv_v2){
     float * y = in->GetFromMarshal<float*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasSsbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasSsbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -874,7 +874,7 @@ CUBLAS_ROUTINE_HANDLER(Dsbmv_v2){
     double * y = in->GetFromMarshal<double*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasDsbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasDsbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -896,7 +896,7 @@ CUBLAS_ROUTINE_HANDLER(Chbmv_v2){
     cuComplex * y = in->GetFromMarshal<cuComplex*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasChbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasChbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -918,7 +918,7 @@ CUBLAS_ROUTINE_HANDLER(Zhbmv_v2){
     cuDoubleComplex * y = in->GetFromMarshal<cuDoubleComplex*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasZhbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasZhbmv_v2(handle,uplo,n,k,alpha,A,lda,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -938,7 +938,7 @@ CUBLAS_ROUTINE_HANDLER(Sspmv_v2){
     float * y = in->GetFromMarshal<float*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasSspmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasSspmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -958,7 +958,7 @@ CUBLAS_ROUTINE_HANDLER(Dspmv_v2){
     double * y = in->GetFromMarshal<double*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasDspmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasDspmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -978,7 +978,7 @@ CUBLAS_ROUTINE_HANDLER(Chpmv_v2){
     cuComplex * y = in->GetFromMarshal<cuComplex*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasChpmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasChpmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 
@@ -998,7 +998,7 @@ CUBLAS_ROUTINE_HANDLER(Zhpmv_v2){
     cuDoubleComplex * y = in->GetFromMarshal<cuDoubleComplex*>();
     int incy = in->Get<int>();
     
-    cublasStatus cs = cublasZhpmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
+    cublasStatus_t cs = cublasZhpmv_v2(handle,uplo,n,alpha,AP,x,incx,beta,y,incy);
     return std::make_shared<Result>(cs);
 }
 

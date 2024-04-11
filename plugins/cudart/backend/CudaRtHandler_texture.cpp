@@ -27,6 +27,7 @@
 
 // extern const textureReference *getTexture(const textureReference *handler);
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(BindTexture) {
   try {
     std::shared_ptr<Buffer> out = std::make_shared<Buffer>();
@@ -48,12 +49,14 @@ CUDA_ROUTINE_HANDLER(BindTexture) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+#endif
 
 #ifndef CUDART_VERSION
 #error CUDART_VERSION not defined
 #endif
 #if CUDART_VERSION >= 2030
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(BindTexture2D) {
   try {
     std::shared_ptr<Buffer> out = std::make_shared<Buffer>();
@@ -83,7 +86,9 @@ CUDA_ROUTINE_HANDLER(BindTexture2D) {
   }
 }
 #endif
+#endif
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(BindTextureToArray) {
   try {
     char *texrefHandler = input_buffer->AssignString();
@@ -99,6 +104,7 @@ CUDA_ROUTINE_HANDLER(BindTextureToArray) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+#endif
 
 CUDA_ROUTINE_HANDLER(GetChannelDesc) {
   try {
@@ -117,6 +123,7 @@ CUDA_ROUTINE_HANDLER(GetChannelDesc) {
   }
 }
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(GetTextureAlignmentOffset) {
   try {
     std::shared_ptr<Buffer> out = std::make_shared<Buffer>();
@@ -134,7 +141,9 @@ CUDA_ROUTINE_HANDLER(GetTextureAlignmentOffset) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(GetTextureReference) {
   textureReference *texref;
   try {
@@ -158,7 +167,9 @@ CUDA_ROUTINE_HANDLER(GetTextureReference) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+#endif
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(UnbindTexture) {
   try {
     char *texrefHandler = input_buffer->AssignString();
@@ -170,6 +181,7 @@ CUDA_ROUTINE_HANDLER(UnbindTexture) {
     return std::make_shared<Result>(cudaErrorMemoryAllocation);
   }
 }
+#endif
 
 CUDA_ROUTINE_HANDLER(CreateTextureObject) {
   cudaTextureObject_t tex = 0;
