@@ -13,5 +13,5 @@ ENV GVIRTUS_HOME=/GVirtuS
 ENV GVIRTUS_CONFIG=${GVIRTUS_HOME}/etc/properties.json
 ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${GVIRTUS_HOME}/lib/frontend:${LD_LIBRARY_PATH}
 ENV GVIRTUS_LOGLEVEL=10000
-RUN ln -s /GVirtuS/lib/frontend/libcudart.so.12  /GVirtuS/lib/frontend/libcudart.so.12.0
+#RUN ln -s /GVirtuS/lib/frontend/libcudart.so.12  /GVirtuS/lib/frontend/libcudart.so.12.0
 CMD ["sleep", "infinity"]
