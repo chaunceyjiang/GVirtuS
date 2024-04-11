@@ -30,6 +30,7 @@
 
 using namespace std;
 
+#if (CUDART_VERSION < 12000)
 extern "C" __host__ cudaError_t CUDARTAPI
 cudaBindSurfaceToArray(const surfaceReference *surfref, const cudaArray *array,
                        const cudaChannelFormatDesc *desc) {
@@ -46,6 +47,7 @@ cudaBindSurfaceToArray(const surfaceReference *surfref, const cudaArray *array,
   CudaRtFrontend::Execute("cudaBindSurfaceToArray");
   return CudaRtFrontend::GetExitCode();
 }
+#endif
 
 // extern "C" __host__ cudaError_t CUDARTAPI cudaGetTextureReference(const
 // textureReference **texref,

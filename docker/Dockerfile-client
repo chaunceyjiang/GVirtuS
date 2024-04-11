@@ -1,13 +1,13 @@
-FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-devel-ubuntu22.04 as cuda11
+FROM nvcr.io/nvidia/cuda:12.0.0-cudnn8-devel-ubuntu22.04 as cuda12
 WORKDIR /
 COPY . /
 RUN apt-get update
 RUN apt-get install -y build-essential libxmu-dev libxi-dev libgl-dev libosmesa-dev git liblog4cplus-dev cmake curl
 RUN mkdir build && cd build && cmake .. && make && make install
 
-FROM nvcr.io/nvidia/cuda:11.8.0-cudnn8-runtime-ubuntu22.04
+FROM nvcr.io/nvidia/cuda:12.0.0-cudnn8-runtime-ubuntu22.04
 WORKDIR /
-COPY --from=cuda11 /root/GVirtuS /GVirtuS
+COPY --from=cuda12 /root/GVirtuS /GVirtuS
 ENV GVIRTUS_HOME=/GVirtuS
 ENV GVIRTUS_CONFIG=${GVIRTUS_HOME}/etc/properties.json
 ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${GVIRTUS_HOME}/lib/frontend:${LD_LIBRARY_PATH}

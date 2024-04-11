@@ -81,6 +81,7 @@ extern void __cudaRegisterVar(void **fatCubinHandle, char *hostVar,
 extern void __cudaRegisterSharedVar(void **fatCubinHandle, void **devicePtr,
                                     size_t size, size_t alignment, int storage);
 extern void __cudaRegisterShared(void **fatCubinHandle, void **devicePtr);
+#if (CUDART_VERSION < 12000)
 extern void __cudaRegisterTexture(void **fatCubinHandle,
                                   const textureReference *hostVar,
                                   void **deviceAddress, char *deviceName,
@@ -89,6 +90,7 @@ extern void __cudaRegisterSurface(void **fatCubinHandle,
                                   const surfaceReference *hostVar,
                                   void **deviceAddress, char *deviceName,
                                   int dim, int ext);
+#endif
 }
 
 static bool initialized = false;
@@ -420,7 +422,7 @@ CUDA_ROUTINE_HANDLER(RegisterShared) {
 
   return std::make_shared<Result>(cudaSuccess);
 }
-
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(RegisterTexture) {
   try {
     char *handler = input_buffer->AssignString();
@@ -503,19 +505,23 @@ CUDA_ROUTINE_HANDLER(RegisterSurface) {
   }
   return std::make_shared<Result>(cudaSuccess);
 }
+#endif
 
 #if (CUDART_VERSION >= 9020)
 
 
-#if (CUDART_VERSION >= 11000)
+#if (CUDART_VERSION >= 11000 and CUDART_VERSION < 12000)
 #define __CUDACC__
 #define cudaPushCallConfiguration __cudaPushCallConfiguration
+#include "crt/device_functions.h"
 #endif
 
-
-#include "crt/device_functions.h"
+#if (CUDART_VERSION >= 12000)
+#include <cuda_runtime_api.h>
+#endif
 #include "CudaRt_internal.h"
 
+#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(PushCallConfiguration) {
     try {
         dim3 gridDim = input_buffer->Get<dim3>();
@@ -537,6 +543,7 @@ CUDA_ROUTINE_HANDLER(PushCallConfiguration) {
     }
 
 }
+#endif
 
 extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration(dim3 *gridDim,
                                                         dim3 *blockDim,
