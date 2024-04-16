@@ -141,7 +141,7 @@ Frontend::~Frontend() {
             env != nullptr && (strcasecmp(env, "on") == 0 || strcasecmp(env, "true") == 0 || strcmp(env, "1") == 0);
 
     map<pthread_t, Frontend *>::iterator it;
-    for (it = mpFrontends->begin(); it != mpFrontends->end(); it++) {
+    for (it = mpFrontends->begin(); it != mpFrontends->end();) {
         if (dump_stats) {
             std::cerr << "[GVIRTUS_STATS] Executed " << it->second->mRoutinesExecuted << " routine(s) in "
                       << it->second->mRoutineExecutionTime << " second(s)\n"
@@ -152,7 +152,7 @@ Frontend::~Frontend() {
                       << it->second->mReceivingTime
                       << " second(s)\n";
         }
-        mpFrontends->erase(it);
+        it = mpFrontends->erase(it); // erase returns the iterator of the next element
     }
 }
 
