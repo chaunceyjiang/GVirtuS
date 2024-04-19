@@ -300,6 +300,7 @@ extern "C" __host__ __device__  unsigned CUDARTAPI __cudaPushCallConfiguration(d
     //printf("cudaPushCallConfiguration:%d\n",cudaError);
     return cudaError;
 }
+#endif
 
 
 extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration( dim3 *gridDim,
@@ -332,4 +333,3 @@ extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration( dim3 *gridDim,
     */
     return cudaError;
 }
-#endif
