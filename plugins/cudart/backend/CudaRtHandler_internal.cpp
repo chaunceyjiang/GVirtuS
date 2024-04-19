@@ -544,6 +544,7 @@ CUDA_ROUTINE_HANDLER(PushCallConfiguration) {
 
 }
 #endif
+#endif
 
 extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration(dim3 *gridDim,
                                                         dim3 *blockDim,
@@ -579,4 +580,3 @@ CUDA_ROUTINE_HANDLER(PopCallConfiguration) {
     }
 
 }
-#endif
