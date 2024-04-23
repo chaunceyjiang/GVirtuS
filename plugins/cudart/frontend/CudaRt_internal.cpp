@@ -275,7 +275,7 @@ extern "C" __host__ void __cudaTextureFetch(const void *tex, void *index,
 }
 
 
-#if CUDA_VERSION >= 9000 and CUDART_VERSION < 12000
+#if CUDA_VERSION >= 9000
 extern "C" __host__ __device__  unsigned CUDARTAPI __cudaPushCallConfiguration(dim3 gridDim, dim3 blockDim, size_t sharedMem = 0, void *stream = 0) {
     CudaRtFrontend::Prepare();
     CudaRtFrontend::AddVariableForArguments(gridDim);

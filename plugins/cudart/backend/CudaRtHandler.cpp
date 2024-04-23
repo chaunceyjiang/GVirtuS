@@ -336,6 +336,7 @@ void CudaRtHandler::Initialize() {
 
   /* CudaRtHandler_error */
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(GetErrorString));
+  mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(GetErrorName));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(GetLastError));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(PeekAtLastError));
 
@@ -365,7 +366,7 @@ void CudaRtHandler::Initialize() {
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(SetDoubleForDevice));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(SetDoubleForHost));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(SetupArgument));
-#if CUDART_VERSION >= 9020 and CUDART_VERSION < 12000
+#if CUDART_VERSION >= 9020
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(PushCallConfiguration));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(PopCallConfiguration));
 #endif
