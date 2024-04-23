@@ -510,7 +510,7 @@ CUDA_ROUTINE_HANDLER(RegisterSurface) {
 #if (CUDART_VERSION >= 9020)
 
 
-#if (CUDART_VERSION >= 11000 and CUDART_VERSION < 12000)
+#if (CUDART_VERSION >= 11000)
 #define __CUDACC__
 #define cudaPushCallConfiguration __cudaPushCallConfiguration
 #include "crt/device_functions.h"
@@ -521,7 +521,6 @@ CUDA_ROUTINE_HANDLER(RegisterSurface) {
 #endif
 #include "CudaRt_internal.h"
 
-#if (CUDART_VERSION < 12000)
 CUDA_ROUTINE_HANDLER(PushCallConfiguration) {
     try {
         dim3 gridDim = input_buffer->Get<dim3>();
@@ -543,7 +542,6 @@ CUDA_ROUTINE_HANDLER(PushCallConfiguration) {
     }
 
 }
-#endif
 #endif
 
 extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration(dim3 *gridDim,
