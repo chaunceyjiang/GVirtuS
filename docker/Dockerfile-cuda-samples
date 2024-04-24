@@ -9,6 +9,7 @@ RUN cd cuda-samples && make EXTRA_NVCCFLAGS="--cudart=shared" all
 FROM ghcr.io/megacloudcontainer/gvirtus/client:dev
 WORKDIR /
 COPY --from=cuda11 /cuda-samples/bin/x86_64/linux/release/ /usr/local/bin/
+COPY --from=cuda11 /cuda-samples /
 ENV GVIRTUS_HOME=/GVirtuS
 ENV GVIRTUS_CONFIG=${GVIRTUS_HOME}/etc/properties.json
 ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${GVIRTUS_HOME}/lib/frontend:${LD_LIBRARY_PATH}
