@@ -37,12 +37,10 @@
 
 
 extern "C" __host__ void **__cudaRegisterFatBinary(void *fatCubin) {
-
-
-
-  /* Fake host pointer */
-  __fatBinC_Wrapper_t *bin = (__fatBinC_Wrapper_t *)fatCubin;
-  char *data = (char *)bin->data;
+    /* Fake host pointer */
+    __fatBinC_Wrapper_t *bin = (__fatBinC_Wrapper_t *) fatCubin;
+    printf("__cudaRegisterFatBinary front fatCubin is %p", bin);
+    char *data = (char *) bin->data;
 
     NvFatCubin *pFatCubin = (NvFatCubin *)data;
     // check so its really an elf file
@@ -67,7 +65,7 @@ extern "C" __host__ void **__cudaRegisterFatBinary(void *fatCubin) {
                 char *szSectionName = (sh_str + sh_table[i].sh_name);
                 if (strncmp(".nv.info.", szSectionName, strlen(".nv.info.")) == 0) {
                     char *szFuncName = szSectionName + strlen(".nv.info.");
-                    //printf("%s:\n", szFuncName);
+                    printf("%s:\n", szFuncName);
                     byte *p = (byte *) eh + sh_table[i].sh_offset;
 
                     NvInfoFunction infoFunction;
@@ -90,8 +88,10 @@ extern "C" __host__ void **__cudaRegisterFatBinary(void *fatCubin) {
                         if (pAttr->attr == EIATTR_KPARAM_INFO) {
                             NvInfoKParam *nvInfoKParam = (NvInfoKParam *) pAttr;
 
-                            //printf("index:%d align:%x ordinal:%d offset:%d a:%x size:%d %d b:%x\n",  nvInfoKParam->index, nvInfoKParam->index, nvInfoKParam->ordinal,
-                            //       nvInfoKParam->offset, nvInfoKParam->a, (nvInfoKParam->size & 0xf8) >> 2, nvInfoKParam->size & 0x07, nvInfoKParam->b);
+                            printf("index:%d align:%x ordinal:%d offset:%d a:%x size:%d %d b:%x\n", nvInfoKParam->index,
+                                   nvInfoKParam->index, nvInfoKParam->ordinal,
+                                   nvInfoKParam->offset, nvInfoKParam->a, (nvInfoKParam->size & 0xf8) >> 2,
+                                   nvInfoKParam->size & 0x07, nvInfoKParam->b);
 
                             NvInfoKParam nvInfoKParam1;
                             nvInfoKParam1.index = nvInfoKParam->index;
@@ -120,103 +120,105 @@ extern "C" __host__ void **__cudaRegisterFatBinary(void *fatCubin) {
         CudaRtFrontend::Execute("cudaRegisterFatBinary", input_buffer);
         if (CudaRtFrontend::Success()) return (void **) fatCubin;
     }
-  return NULL;
+    return NULL;
 }
 
 extern "C" __host__ void **__cudaRegisterFatBinaryEnd(void *fatCubin) {
-  /* Fake host pointer */
-  __fatBinC_Wrapper_t *bin = (__fatBinC_Wrapper_t *)fatCubin;
-  char *data = (char *)bin->data;
+    /* Fake host pointer */
+    __fatBinC_Wrapper_t *bin = (__fatBinC_Wrapper_t *) fatCubin;
+    char *data = (char *) bin->data;
 
-  Buffer *input_buffer = new Buffer();
-  input_buffer->AddString(CudaUtil::MarshalHostPointer((void **)bin));
-  input_buffer = CudaUtil::MarshalFatCudaBinary(bin, input_buffer);
+    Buffer *input_buffer = new Buffer();
+    input_buffer->AddString(CudaUtil::MarshalHostPointer((void **) bin));
+    input_buffer = CudaUtil::MarshalFatCudaBinary(bin, input_buffer);
 
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::Execute("cudaRegisterFatBinaryEnd", input_buffer);
-  if (CudaRtFrontend::Success()) return (void **)fatCubin;
-  return NULL;
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::Execute("cudaRegisterFatBinaryEnd", input_buffer);
+    if (CudaRtFrontend::Success()) return (void **) fatCubin;
+    return NULL;
 }
 
 extern "C" __host__ void __cudaUnregisterFatBinary(void **fatCubinHandle) {
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::AddStringForArguments(
-      CudaUtil::MarshalHostPointer(fatCubinHandle));
-  CudaRtFrontend::Execute("cudaUnregisterFatBinary");
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddStringForArguments(
+            CudaUtil::MarshalHostPointer(fatCubinHandle));
+    CudaRtFrontend::Execute("cudaUnregisterFatBinary");
 }
 
 extern "C" __host__ void __cudaRegisterFunction(
-    void **fatCubinHandle, const char *hostFun, char *deviceFun,
-    const char *deviceName, int thread_limit, uint3 *tid, uint3 *bid,
-    dim3 *bDim, dim3 *gDim, int *wSize) {
+        void **fatCubinHandle, const char *hostFun, char *deviceFun,
+        const char *deviceName, int thread_limit, uint3 *tid, uint3 *bid,
+        dim3 *bDim, dim3 *gDim, int *wSize) {
+    printf("__cudaRegisterFunction(fatCubinHandle=%p, hostFun=%p, devFunc=%s, "
+           "deviceName=%s, thread_limit=%d, tid=[%p], bid=[%p], bDim=[%p], "
+           "gDim=[%p], wSize=%p)\n",
+           fatCubinHandle, hostFun, deviceFun, deviceName, thread_limit, tid,
+           bid, bDim, gDim, wSize);
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddStringForArguments(
+            CudaUtil::MarshalHostPointer(fatCubinHandle));
 
-    //printf("__cudaRegisterFunction - hostFun:%x deviceFun:%s\n",hostFun,deviceFun);
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::AddStringForArguments(
-      CudaUtil::MarshalHostPointer(fatCubinHandle));
+    CudaRtFrontend::AddVariableForArguments((gvirtus::common::pointer_t) hostFun);
+    CudaRtFrontend::AddStringForArguments(deviceFun);
+    CudaRtFrontend::AddStringForArguments(deviceName);
+    CudaRtFrontend::AddVariableForArguments(thread_limit);
+    CudaRtFrontend::AddHostPointerForArguments(tid);
+    CudaRtFrontend::AddHostPointerForArguments(bid);
+    CudaRtFrontend::AddHostPointerForArguments(bDim);
+    CudaRtFrontend::AddHostPointerForArguments(gDim);
+    CudaRtFrontend::AddHostPointerForArguments(wSize);
 
-  CudaRtFrontend::AddVariableForArguments((gvirtus::common::pointer_t)hostFun);
-  CudaRtFrontend::AddStringForArguments(deviceFun);
-  CudaRtFrontend::AddStringForArguments(deviceName);
-  CudaRtFrontend::AddVariableForArguments(thread_limit);
-  CudaRtFrontend::AddHostPointerForArguments(tid);
-  CudaRtFrontend::AddHostPointerForArguments(bid);
-  CudaRtFrontend::AddHostPointerForArguments(bDim);
-  CudaRtFrontend::AddHostPointerForArguments(gDim);
-  CudaRtFrontend::AddHostPointerForArguments(wSize);
+    CudaRtFrontend::Execute("cudaRegisterFunction");
 
-  CudaRtFrontend::Execute("cudaRegisterFunction");
-
-  deviceFun = CudaRtFrontend::GetOutputString();
-  tid = CudaRtFrontend::GetOutputHostPointer<uint3>();
-  bid = CudaRtFrontend::GetOutputHostPointer<uint3>();
-  bDim = CudaRtFrontend::GetOutputHostPointer<dim3>();
-  gDim = CudaRtFrontend::GetOutputHostPointer<dim3>();
-  wSize = CudaRtFrontend::GetOutputHostPointer<int>();
+    deviceFun = CudaRtFrontend::GetOutputString();
+    tid = CudaRtFrontend::GetOutputHostPointer<uint3>();
+    bid = CudaRtFrontend::GetOutputHostPointer<uint3>();
+    bDim = CudaRtFrontend::GetOutputHostPointer<dim3>();
+    gDim = CudaRtFrontend::GetOutputHostPointer<dim3>();
+    wSize = CudaRtFrontend::GetOutputHostPointer<int>();
 
 
-
-  CudaRtFrontend::addHost2DeviceFunc((void*)hostFun,deviceFun);
+    CudaRtFrontend::addHost2DeviceFunc((void *) hostFun, deviceFun);
 }
 
 extern "C" __host__ void __cudaRegisterVar(void **fatCubinHandle, char *hostVar,
                                            char *deviceAddress,
                                            const char *deviceName, int ext,
                                            int size, int constant, int global) {
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::AddStringForArguments(
-      CudaUtil::MarshalHostPointer(fatCubinHandle));
-  CudaRtFrontend::AddStringForArguments(CudaUtil::MarshalHostPointer(hostVar));
-  CudaRtFrontend::AddStringForArguments(deviceAddress);
-  CudaRtFrontend::AddStringForArguments(deviceName);
-  CudaRtFrontend::AddVariableForArguments(ext);
-  CudaRtFrontend::AddVariableForArguments(size);
-  CudaRtFrontend::AddVariableForArguments(constant);
-  CudaRtFrontend::AddVariableForArguments(global);
-  CudaRtFrontend::Execute("cudaRegisterVar");
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddStringForArguments(
+            CudaUtil::MarshalHostPointer(fatCubinHandle));
+    CudaRtFrontend::AddStringForArguments(CudaUtil::MarshalHostPointer(hostVar));
+    CudaRtFrontend::AddStringForArguments(deviceAddress);
+    CudaRtFrontend::AddStringForArguments(deviceName);
+    CudaRtFrontend::AddVariableForArguments(ext);
+    CudaRtFrontend::AddVariableForArguments(size);
+    CudaRtFrontend::AddVariableForArguments(constant);
+    CudaRtFrontend::AddVariableForArguments(global);
+    CudaRtFrontend::Execute("cudaRegisterVar");
 }
 
 extern "C" __host__ void __cudaRegisterShared(void **fatCubinHandle,
                                               void **devicePtr) {
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::AddStringForArguments(
-      CudaUtil::MarshalHostPointer(fatCubinHandle));
-  CudaRtFrontend::AddStringForArguments((char *)devicePtr);
-  CudaRtFrontend::Execute("cudaRegisterShared");
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddStringForArguments(
+            CudaUtil::MarshalHostPointer(fatCubinHandle));
+    CudaRtFrontend::AddStringForArguments((char *) devicePtr);
+    CudaRtFrontend::Execute("cudaRegisterShared");
 }
 
 extern "C" __host__ void __cudaRegisterSharedVar(void **fatCubinHandle,
                                                  void **devicePtr, size_t size,
                                                  size_t alignment,
                                                  int storage) {
-  CudaRtFrontend::Prepare();
-  CudaRtFrontend::AddStringForArguments(
-      CudaUtil::MarshalHostPointer(fatCubinHandle));
-  CudaRtFrontend::AddStringForArguments((char *)devicePtr);
-  CudaRtFrontend::AddVariableForArguments(size);
-  CudaRtFrontend::AddVariableForArguments(alignment);
-  CudaRtFrontend::AddVariableForArguments(storage);
-  CudaRtFrontend::Execute("cudaRegisterSharedVar");
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddStringForArguments(
+            CudaUtil::MarshalHostPointer(fatCubinHandle));
+    CudaRtFrontend::AddStringForArguments((char *) devicePtr);
+    CudaRtFrontend::AddVariableForArguments(size);
+    CudaRtFrontend::AddVariableForArguments(alignment);
+    CudaRtFrontend::AddVariableForArguments(storage);
+    CudaRtFrontend::Execute("cudaRegisterSharedVar");
 }
 
 #if (CUDART_VERSION < 12000)
@@ -261,22 +263,23 @@ extern "C" __host__ void __cudaRegisterSurface(void **fatCubinHandle,
 /* */
 
 extern "C" __host__ int __cudaSynchronizeThreads(void **x, void *y) {
-  // FIXME: implement
-  std::cerr << "*** Error: __cudaSynchronizeThreads() not yet implemented!"
-            << std::endl;
-  return 0;
+    // FIXME: implement
+    std::cerr << "*** Error: __cudaSynchronizeThreads() not yet implemented!"
+              << std::endl;
+    return 0;
 }
 
 extern "C" __host__ void __cudaTextureFetch(const void *tex, void *index,
                                             int integer, void *val) {
-  // FIXME: implement
-  std::cerr << "*** Error: __cudaTextureFetch() not yet implemented!"
-            << std::endl;
+    // FIXME: implement
+    std::cerr << "*** Error: __cudaTextureFetch() not yet implemented!"
+              << std::endl;
 }
 
 
 #if CUDA_VERSION >= 9000
-extern "C" __host__ __device__  unsigned CUDARTAPI __cudaPushCallConfiguration(dim3 gridDim, dim3 blockDim, size_t sharedMem = 0, void *stream = 0) {
+extern "C" __host__ __device__ unsigned CUDARTAPI
+__cudaPushCallConfiguration(dim3 gridDim, dim3 blockDim, size_t sharedMem = 0, void *stream = 0) {
     CudaRtFrontend::Prepare();
     CudaRtFrontend::AddVariableForArguments(gridDim);
     CudaRtFrontend::AddVariableForArguments(blockDim);
@@ -296,17 +299,17 @@ extern "C" __host__ __device__  unsigned CUDARTAPI __cudaPushCallConfiguration(d
 
 
     CudaRtFrontend::Execute("cudaPushCallConfiguration");
-    cudaError_t cudaError=CudaRtFrontend::GetExitCode();
+    cudaError_t cudaError = CudaRtFrontend::GetExitCode();
     //printf("cudaPushCallConfiguration:%d\n",cudaError);
     return cudaError;
 }
 #endif
 
 
-extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration( dim3 *gridDim,
-                                                             dim3 *blockDim,
-                                                             size_t *sharedMem,
-                                                             void *stream) {
+extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration(dim3 *gridDim,
+                                                            dim3 *blockDim,
+                                                            size_t *sharedMem,
+                                                            void *stream) {
     /*
     printf("__cudaPopCallConfiguration:\n");
     printf("gridDim: %d,%d,%d\n",gridDim->x,gridDim->y,gridDim->z);
@@ -316,15 +319,15 @@ extern "C" cudaError_t CUDARTAPI __cudaPopCallConfiguration( dim3 *gridDim,
     CudaRtFrontend::Prepare();
 
     CudaRtFrontend::Execute("cudaPopCallConfiguration");
-    cudaError_t cudaError=CudaRtFrontend::GetExitCode();
+    cudaError_t cudaError = CudaRtFrontend::GetExitCode();
     //printf("__cudaPopCallConfiguration:%d\n",cudaError);
 
     *gridDim = CudaRtFrontend::GetOutputVariable<dim3>();
     *blockDim = CudaRtFrontend::GetOutputVariable<dim3>();
     *sharedMem = CudaRtFrontend::GetOutputVariable<size_t>();
-    cudaStream_t stream1=CudaRtFrontend::GetOutputVariable<cudaStream_t>();
+    cudaStream_t stream1 = CudaRtFrontend::GetOutputVariable<cudaStream_t>();
     //cudaStream_t stream1=0;
-    memcpy(stream,&stream1,sizeof(cudaStream_t));
+    memcpy(stream, &stream1, sizeof(cudaStream_t));
 
     /*
     printf("gridDim: %d,%d,%d\n",gridDim->x,gridDim->y,gridDim->z);

@@ -315,7 +315,7 @@ CUDA_ROUTINE_HANDLER(RegisterFunction) {
     int *wSize = input_buffer->Assign<int>();
     __cudaRegisterFunction(fatCubinHandle, hostfun, deviceFun, deviceName,
                            thread_limit, tid, bid, bDim, gDim, wSize);
-
+    printf("tid %d,bid %d,bDim %d,gDim %d\n",tid,bid,bDim,gDim);
 #ifdef DEBUG
     cudaError_t error = cudaGetLastError();
     if (error != 0) {
