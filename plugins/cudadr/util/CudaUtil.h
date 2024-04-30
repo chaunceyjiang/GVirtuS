@@ -38,14 +38,21 @@
 
 #include <iostream>
 #include <cstdlib>
+#include <cuda.h>
 
+#if CUDA_VERSION >= 11000
+#include <fatbinary_section.h>
+#else
 #include <fatBinaryCtl.h>
 #include <fatbinary.h>
+#endif
+
 #include <texture_types.h>
-#include "__cudaFatFormat.h"
+#include <../__cudaFatFormat.h>
+#include <gvirtus/communicators/Buffer.h>
 
-#include "communicator/Buffer.h"
-
+using gvirtus::communicators::Buffer;
+using gvirtus::common::pointer_t;
 //#define DEBUG
 
 /**

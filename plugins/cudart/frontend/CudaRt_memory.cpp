@@ -959,3 +959,15 @@ cudaMemset3D(cudaPitchedPtr pitchDevPtr, int value, cudaExtent extent) {
   cerr << "*** Error: cudaMemset3D() not yet implemented!" << endl;
   return cudaErrorUnknown;
 }
+
+extern "C" __host__ cudaError_t CUDARTAPI cudaMemGetInfo(size_t *free, size_t *total) {
+    CudaRtFrontend::Prepare();
+    CudaRtFrontend::AddVariableForArguments(free);
+    CudaRtFrontend::AddVariableForArguments(total);
+    CudaRtFrontend::Execute("cudaMemGetInfo");
+    if (CudaRtFrontend::Success()){
+        *free = *(CudaRtFrontend::GetOutputHostPointer<size_t>());
+        *total = *(CudaRtFrontend::GetOutputHostPointer<size_t>());
+    }
+    return CudaRtFrontend::GetExitCode();
+}

@@ -29,12 +29,11 @@
 #include <stdio.h>
 #include <string.h>
 #include <fstream>
-
-
-#include "util/Decoder.h"
+#include <gvirtus/common/Decoder.h>
 
 using namespace std;
 using namespace log4cplus;
+using gvirtus::common::Decoder;
 
 /*Load a module's data. */
 CUDA_DRIVER_HANDLER(ModuleLoadData) {

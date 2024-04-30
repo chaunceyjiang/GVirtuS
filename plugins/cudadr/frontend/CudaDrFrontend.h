@@ -30,7 +30,9 @@
 
 #include "CudaUtil.h"
 
-#include "Frontend.h"
+#include <gvirtus/frontend/Frontend.h>
+
+using  gvirtus::frontend::Frontend;
 
 class CudaDrFrontend {
 public:

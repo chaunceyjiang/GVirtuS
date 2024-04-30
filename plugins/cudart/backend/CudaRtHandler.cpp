@@ -408,6 +408,7 @@ void CudaRtHandler::Initialize() {
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(Memcpy2DToArray));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(Malloc3DArray));
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(MemcpyPeerAsync));
+  mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(MemGetInfo));
 
   /* CudaRtHandler_opengl */
   mspHandlers->insert(CUDA_ROUTINE_HANDLER_PAIR(GLSetGLDevice));
