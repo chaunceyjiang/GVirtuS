@@ -3,6 +3,17 @@ WORKDIR /
 COPY . /
 RUN apt-get update
 RUN apt-get install -y build-essential libxmu-dev libxi-dev libgl-dev libosmesa-dev git liblog4cplus-dev cmake curl
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-archive-keyring.gpg && \
+    mv cuda-archive-keyring.gpg /usr/share/keyrings/cuda-archive-keyring.gpg && \
+    echo "deb [signed-by=/usr/share/keyrings/cuda-archive-keyring.gpg] https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/ /" | tee /etc/apt/sources.list.d/cuda-ubuntu2204-x86_64.list && \
+    wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin && \
+    mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600
+
+RUN apt-get update && apt-get install -y cuda
+
+ENV PATH="/usr/local/cuda/bin:${PATH}"
+ENV LIBRARY_PATH="/usr/local/cuda/targets/x86_64-linux/lib/stubs:$(LIBRARY_PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/cuda/lib64:/usr/local/cuda/targets/x86_64-linux/lib/stubs:${LD_LIBRARY_PATH}"
 RUN mkdir build && cd build && cmake .. && make && make install
 
 FROM nvcr.io/nvidia/cuda:12.0.0-cudnn8-runtime-ubuntu22.04
