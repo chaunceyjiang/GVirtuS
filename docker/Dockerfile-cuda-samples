@@ -15,5 +15,5 @@ ENV GVIRTUS_CONFIG=${GVIRTUS_HOME}/etc/properties.json
 ENV LD_LIBRARY_PATH=${GVIRTUS_HOME}/lib:${GVIRTUS_HOME}/lib/frontend:${LD_LIBRARY_PATH}
 ENV GVIRTUS_LOGLEVEL=10000
 #RUN ln -s /GVirtuS/lib/frontend/libcudart.so.12  /GVirtuS/lib/frontend/libcudart.so.12.0
-RUN apt-get update && apt-get install -y python3 && apt-get install -y pip && pip install tensorflow
+RUN apt-get update && apt-get install -y python3 && apt-get install -y pip && pip install tensorflow[and-cuda]
 CMD ["sleep", "infinity"]
